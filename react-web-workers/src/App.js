@@ -1,17 +1,35 @@
 import React, { useState, useEffect } from 'react';
-/* eslint-disable import/no-webpack-loader-syntax */
-import Worker from 'worker-loader!./workers/apple.worker.js';
+// Use this syntax if you don't want configure webpack!
+// /* eslint-disable import/no-webpack-loader-syntax */
+// import Worker from 'worker-loader!./workers/apple.worker.js';
+// otherwise use this in webpack:
+/**
+ * rules: [
+        {
+          test: /\.worker\.js$/,
+          use: { loader: 'worker-loader' },
+        },
+ */
+
+import Worker from './workers/apple.worker.js';
+
+const appleWorker = new Worker();
 
 const App = () => {
   const [countTomato, setCountTomato] = useState(0);
   const [countApple, setCountApple] = useState(0);
 
-  const appleWorker = new Worker();
-  console.log(appleWorker);
+  useEffect(() => {
+    appleWorker.onmessage = e => {
+      if (e && e.data) {
+        setCountApple(e.data);
+      }
+    };
+  }, []);
 
-  useEffect(() => {}, []);
-
-  function incApple() {}
+  function incApple() {
+    appleWorker.postMessage({ msg: 'incApple', countApple: countApple });
+  }
 
   return (
     <div>
@@ -19,7 +37,7 @@ const App = () => {
         Tomato: {countTomato} | Apple: {countApple}
       </div>
 
-      <div className='ion-padding-top'>
+      <div>
         <button onClick={() => setCountTomato(countTomato + 1)}>Tomato</button>
 
         <button onClick={() => incApple()}>Apple</button>
