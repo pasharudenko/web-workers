@@ -1,15 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// Use this syntax if you don't want configure webpack!
-// /* eslint-disable import/no-webpack-loader-syntax */
-// import Worker from 'worker-loader!./workers/apple.worker.js';
-// otherwise use this in webpack:
-/**
- * rules: [
-        {
-          test: /\.worker\.js$/,
-          use: { loader: 'worker-loader' },
-        },
- */
+
 
 import Worker from './workers/apple.worker.js';
 
